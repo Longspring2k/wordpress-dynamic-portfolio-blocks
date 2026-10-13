@@ -1,22 +1,30 @@
 # Scope and evidence boundaries
 
-## Documented state
+## Repository state
 
-Implemented candidate; deployment of the inspected candidate is not asserted.
+This repository now contains a newly written, runnable educational PHP demo and deeper technical documentation. It is not the original private implementation and is not presented as an installable WordPress plugin or theme.
 
 ## Evidence basis
 
-Source inspection supports the content model, rendering paths and migration guards. Candidate source and deployed snapshots are not treated as interchangeable evidence.
+The public narrative describes general engineering responsibilities and patterns supported by retained private implementation and verification artifacts. Those artifacts are not redistributed. The executable in this repository independently demonstrates a bounded subset of the architecture with fabricated generic records.
 
-The public narrative was prepared against retained implementation and verification artifacts. Those private references are not redistributed. Source inspection, recorded test results, staging observations and production deployment are different levels of evidence; none is silently substituted for another.
+Source inspection, an educational model, local test results, staging observations, and production deployment are different evidence levels. None is silently substituted for another.
 
-## Not claimed or distributed
+## Included
 
-- This is a technical architecture showcase, not an installable portfolio theme.
-- No original project records, editorial copy or migration payloads are included.
+- Original public PHP code for record validation, ordered public selection, taxonomy filtering, escaped rendering, guarded composition replacement, snapshots, and recovery.
+- Dependency-free tests and a CLI demonstration.
+- English documentation of contracts, ownership, state transitions, failures, alternatives, and WordPress adapter responsibilities.
+- Fabricated identifiers and content used only to explain behavior.
 
-## Public repository boundary
+## Not included or claimed
 
-Only newly written technical documentation and illustrative diagrams are included. There are no original application source files, datasets, screenshots, deployment scripts, credentials or inherited Git history. No business-performance figures or customer endorsements are asserted.
+- Client source, names, domains, IDs, records, copy, screenshots, visual assets, configuration, credentials, or inherited history.
+- Original private application source or a grant of rights to it.
+- Native WordPress persistence, Gutenberg UI, REST, WP-CLI, database transactions, concurrency guarantees, or deployment scripts.
+- A production deployment, production test, benchmark, business result, or performance metric.
+- Compatibility with any particular WordPress, PHP plugin, hosting, or database configuration beyond the locally exercised PHP runtime.
 
-The repository is intended for technical review of the engineering approach. It makes no grant of rights to the original private implementation or third-party dependencies.
+## Review intent
+
+The repository is suitable for reviewing the reasoning and executable behavior of a small architecture slice. Production use would require a real WordPress adapter, security controls, durable atomic writes, integration tests, operational recovery procedures, and project-specific acceptance criteria.

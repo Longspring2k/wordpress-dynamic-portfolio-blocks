@@ -1,47 +1,95 @@
 # Dynamic WordPress Blocks and Content Models
 
-A dynamic block system with a companion content plugin, separating structured records from the theme that displays them.
+An original, dependency-free PHP demonstration of a content model that stays separate from rendering, plus a guarded page-composition migration with recovery snapshots.
 
-**Technical showcase · Documentation only · Anonymized**
+**Technical showcase · Runnable educational demo · Anonymized**
 
-WordPress | PHP | Gutenberg | REST API | JavaScript | WP-CLI
+PHP 8.3 | WordPress-oriented architecture | Dynamic rendering | Optimistic concurrency
 
-## Engineering problem
+This repository does not contain client source, records, names, domains, identifiers, or assets. The small executable was written for this public repository; the original implementation remains private.
 
-A content-rich site needs flexible presentation without binding its records to a single theme. Editorial controls also need to cover the real rendered fields, rather than exposing settings that never affect the page.
+## Quick start
 
-## Implementation scope
+From the repository root:
 
-- Registered server-rendered blocks from metadata and supplied shared editor controls.
-- Moved structured records, taxonomy and post metadata into a companion plugin independent of the theme.
-- Implemented block-editor and classic-editor controls with media selection, capability checks, nonce verification and sanitization.
-- Rendered taxonomy-driven collections with escaped details, lazy images and carousel accessibility semantics.
-- Prepared content migrations with predecessor checks, asset checks, backups and explicit failure handling.
-
-## Architecture at a glance
-
-The following is an illustrative technical flow, not a client screenshot or a deployment topology.
-
-```mermaid
-flowchart TD
-    N0["Editorial controls"]
-    N1["Content plugin and taxonomy"]
-    N0 --> N1
-    N2["Dynamic PHP blocks"]
-    N1 --> N2
-    N3["Theme presentation"]
-    N2 --> N3
+```bash
+php tests/run.php
+php demo/run.php
 ```
 
-## Evidence and delivery boundary
+Run one or more tests by case-name substring:
 
-Implemented candidate; deployment of the inspected candidate is not asserted.
+```bash
+php tests/run.php migration
+```
 
-Source inspection supports the content model, rendering paths and migration guards. Candidate source and deployed snapshots are not treated as interchangeable evidence.
+A filter that matches no cases exits with status `2`:
 
-## Read more
+```bash
+php tests/run.php no-such-case
+```
 
-- [Engineering decisions](docs/engineering.md)
+No Composer install, database, web server, or WordPress installation is required.
+
+## Sample output
+
+```text
+== Guarded migration ==
+Applied version 13; snapshots: 1
+
+== Stale writer ==
+REFUSED: Expected predecessor version 12, but current version is 13; refusing stale write.
+Current version remains 13; snapshots remain 1.
+```
+
+The demo also prints escaped HTML generated from fabricated structured records.
+
+## What the executable demonstrates
+
+- Structured portfolio records are owned by a catalog rather than embedded in page markup.
+- Selection follows explicit editorial ID order.
+- Draft and private references fail closed; missing IDs are errors rather than omissions.
+- An optional taxonomy term filters the already validated selection while preserving relative order.
+- A renderer accepts one bounded block contract and escapes all record/editor text for HTML output.
+- Composition proposals reject unknown blocks, unknown attributes, missing fields, duplicate IDs, and wrong types.
+- A migration validates its full block contract and resolves every reference against the same public-content catalog before mutation, checks the exact predecessor version, snapshots the predecessor, then applies the successor.
+- A stale proposal changes neither composition nor snapshot history.
+- Snapshot restoration is implemented as another guarded forward version, preserving the state being replaced.
+
+## File map
+
+| Path | Responsibility |
+| --- | --- |
+| `src/PortfolioDemo.php` | Record contracts, published selection, rendering, block validation, versioned migration, snapshot recovery |
+| `tests/run.php` | Dependency-free behavioral test runner with optional substring filtering |
+| `demo/run.php` | Visible render, successful migration, and non-crashing stale-write refusal |
+| `docs/engineering.md` | Contracts, data flow, ownership, migration states, failures, and trade-offs |
+| `docs/wordpress-mapping.md` | Explicit mapping from the in-memory adapter to real WordPress responsibilities |
+| `docs/scope.md` | Evidence, privacy, and implementation boundaries |
+
+## Architecture
+
+```mermaid
+flowchart LR
+    R[Structured records] --> C[PortfolioCatalog]
+    O[Editorial block attributes] --> V[CompositionContract]
+    C --> S[Published ordered selection]
+    V --> S
+    S --> H[Escaped server HTML]
+    P[Migration proposal] --> G{Predecessor and contract valid?}
+    G -- yes --> B[Snapshot current composition]
+    B --> N[Install next version]
+    G -- no --> X[Refuse with no mutation]
+```
+
+The executable uses an in-memory adapter to make the rules inspectable and runnable. It deliberately does **not** implement WordPress persistence, database transaction/concurrency guarantees, editor UI, authentication/capability checks, nonces, native REST endpoints, media handling, or deployment automation. See [WordPress mapping](docs/wordpress-mapping.md) for the production adapter boundary.
+
+## Documentation
+
+- [Engineering contracts and decisions](docs/engineering.md)
+- [WordPress integration mapping](docs/wordpress-mapping.md)
 - [Scope and evidence boundaries](docs/scope.md)
 
-> This repository describes verified implementation work at a technical level. Original source, identities, business data and visual assets are intentionally omitted. It is not an installable application or a claim that the original private implementation is open source.
+## Public/private boundary
+
+This is an original educational model of engineering patterns used in content-rich WordPress work. It is not the original private implementation, an installable plugin, a theme, or proof of a production deployment. It makes no performance, business-impact, or production-concurrency claim.
